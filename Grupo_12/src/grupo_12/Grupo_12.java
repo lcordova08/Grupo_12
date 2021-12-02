@@ -5,16 +5,6 @@
  */
 package grupo_12;
 
-import ConexionBD.Conexion;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -43,27 +33,7 @@ public class Grupo_12 extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {        
-        /*Connection conexion;
-        Conexion c = new Conexion();
-        conexion = c.getConexion();
-        Statement s;
-            try {
-                s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("select sin_acentos from palabras");
-                while(rs.next()){
-                    //System.out.println(rs.getString(1));                    
-                    try(BufferedWriter bw = new BufferedWriter(new FileWriter("src/recursos/palabras/espanol/ciudades.txt",true))){
-                        if(rs.getString(1).length() > 2)
-                            bw.append(rs.getString(1)+"\n");
-                    } catch (IOException ex) {
-                        Logger.getLogger(SopaDeLetras.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                
-            } catch (SQLException ex) {
-                System.err.println(ex.getMessage());
-            }*/
+    public static void main(String[] args) {                        
         CircleDoubleLinkedList<String> prueba = new CircleDoubleLinkedList<>();
         prueba.addLast("a");
         prueba.addLast("b");

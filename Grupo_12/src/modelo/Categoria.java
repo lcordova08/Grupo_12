@@ -10,5 +10,5 @@ package modelo;
  * @author Lea
  */
 public enum Categoria {
-    GENERAL, CIUDADES, ANIMALES, COLORES, PAISES;
+    GENERAL, ANIMALES, PAISES;
 }

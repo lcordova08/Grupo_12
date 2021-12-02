@@ -5,9 +5,11 @@
  */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -15,14 +17,18 @@ import java.util.Stack;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -40,10 +46,12 @@ import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import listas.ArrayList;
 import listas.CircleDoubleLinkedList;
 import modelo.Casilla;
 import modelo.Jugador;
+import grupo_12.Grupo_12;
 import util.Configuracion;
 
 /**
@@ -81,31 +89,6 @@ public class TableroController implements Initializable {
     private Button btnAgregarFila;
     @FXML
     private Button btnAgregarCol;
-    
-    
-    private final String letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    private final String numeros = "0123456789";
-    private Map<Character,ArrayList<String>> palabras;
-    private TableroController tableroController;
-    private Configuracion conf;
-    private ArrayList<CircleDoubleLinkedList<Casilla<Character>>> filas;
-    private ArrayList<CircleDoubleLinkedList<Casilla<Character>>> columnas;
-    private Jugador jugador1;
-    private Jugador jugador2;
-    private int eliminarAgregar = 2;
-    private int indFilaEliminar;
-    private int indColEliminar;
-    private boolean continuar;
-    private ArrayList<String> palabrasEncontradas;
-    private Stack<StackPane> letrasSeleccionadas;
-    private ArrayList<StackPane> indices;
-    private boolean extremo;
-    private String ultimaPalabra;
-    private ArrayList<ImageView> flechasD;
-    private ArrayList<ImageView> flechasI;
-    private ArrayList<ImageView> flechasArr;
-    private ArrayList<ImageView> flechasAb;
-    
     @FXML
     private Label lblError;
     @FXML
@@ -126,6 +109,32 @@ public class TableroController implements Initializable {
     private TextField txtTurno;
     @FXML
     private VBox vbTurno;
+    @FXML
+    private Button btnRegresar;
+    
+    private final String letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    private final String numeros = "0123456789";
+    private Map<Character,ArrayList<String>> dicPalabras;
+    private TableroController tableroController;
+    private Configuracion conf;
+    private ArrayList<CircleDoubleLinkedList<Casilla<Character>>> filas;
+    private ArrayList<CircleDoubleLinkedList<Casilla<Character>>> columnas;
+    private Jugador jugador1;
+    private Jugador jugador2;
+    private int eliminarAgregar = 2;
+    private int indFilaEliminar;
+    private int indColEliminar;
+    private boolean continuar;
+    private ArrayList<String> palabrasEncontradas;
+    private Stack<StackPane> letrasSeleccionadas;
+    private ArrayList<StackPane> indices;
+    private boolean extremo;
+    private String ultimaPalabra;
+    private ArrayList<ImageView> flechasD;
+    private ArrayList<ImageView> flechasI;
+    private ArrayList<ImageView> flechasArr;
+    private ArrayList<ImageView> flechasAb;
+    private ArrayList<String> palabrasDisponibles;   
     
     
     /**
@@ -152,6 +161,7 @@ public class TableroController implements Initializable {
         espaciadoTablero(this.gridDer);
         espaciadoTablero(this.gridIzq);
         espaciadoTablero(this.gridLetras);
+        palabrasDisponibles = new ArrayList<>();
         dragRoot();        
     }    
         
@@ -238,7 +248,7 @@ public class TableroController implements Initializable {
     public void recibirParametros(Configuracion c, Map<Character,ArrayList<String>> palabras, boolean extremo){
         conf = c;   
         this.extremo = extremo;
-        this.palabras = palabras;
+        this.dicPalabras = palabras;
         crearCasillasVacias();
         llenarTablero();
         bottomConfig();
@@ -642,10 +652,10 @@ public class TableroController implements Initializable {
         for (String s: palabra) {
             sb.append(s.trim());
         }
-        ArrayList<String> subLista = palabras.get(sb.toString().charAt(0));
+        ArrayList<String> subLista = dicPalabras.get(sb.toString().charAt(0));
         System.out.println("SUBSTRING: "+ultimaPalabra);   
         int limite = conf.getTablero().getColumnas() * conf.getTablero().getFilas();
-        if(palabrasEncontradas.size() == (limite/3)+2){
+        if(palabrasEncontradas.size() == (limite/2)){
             this.gridLetras.setDisable(true);
             Alert a = new Alert(AlertType.ERROR,"Ha terminado el juego c:");
             a.show();
@@ -667,11 +677,12 @@ public class TableroController implements Initializable {
         }else{
             asignarPuntosJugador(-sb.toString().length());
             actualizarErrores();
+            this.lblError.setText(sb.toString()+"\nno es una palabra valida");
         }
             
            
         return subLista.contains(ultimaPalabra);
-    }
+    }    
     
     private void escribirPalabrasJugador(String pal){
         if(conf.getNumJugadores()==2){
@@ -745,8 +756,11 @@ public class TableroController implements Initializable {
             if(jugador1.getNumErores()==0){
                 gridLetras.setDisable(true);
                 this.hbBottom.setDisable(true);
-                Alert a = new Alert(AlertType.ERROR,"Ha excedido el maximo de errores");
-                a.show();
+                Alert alert = new Alert(AlertType.INFORMATION,"Ha excedido el maximo de errores");
+                Optional<ButtonType> result = alert.showAndWait();
+                alert.getButtonTypes().set(0, ButtonType.CLOSE);
+                result.ifPresent(e->btnRegresar.fire());
+                //alert.show();
                 this.btnMezclar.setDisable(true);
             }
         }
@@ -757,7 +771,7 @@ public class TableroController implements Initializable {
         erroresActuales--;
         jugador.setNumErores(erroresActuales);
         lbl.setText(jugador.getNickname()+ " -> "+erroresActuales+" errores restantes");      
-        if(jugador.getNumErores()==0){
+        if(jugador.getNumErores()==0 && conf.getNumJugadores()==2){
             Alert a = new Alert(AlertType.ERROR,"Ha excedido el maximo de errores");
             a.setContentText(jugador.getNickname()+" ya no podrá seguir jugando");            
             a.show();    
@@ -797,8 +811,47 @@ public class TableroController implements Initializable {
             }else if(jugador2.isJugando() && jugador1.getNumErores()==0){
                 jugador2.setJugando(true);
                 this.txtTurno.setText("Jugador 2");
-            }
-                
+            }                
         }
+    }
+    
+    @FXML
+    private void regresar(){
+        FXMLLoader loader = new FXMLLoader(Grupo_12.class.getResource("/vistas/Inicio.fxml"));
+        Parent root;
+        try {
+            root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();            
+            stage.setScene(scene);
+            stage.show();               
+            cerrarVentana();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        } 
+    }
+    
+    private void cerrarVentana(){
+        Stage myStage = (Stage) this.btnRegresar.getScene().getWindow();
+        myStage.close(); 
+    }
+    
+    private void llenarTableroEspecifico(){
+        int total = conf.getTablero().getColumnas()*conf.getTablero().getFilas();        
+        for (int i = 0; i < (total/2); i++) {            
+            String newWord;
+            ArrayList<String> subLista = dicPalabras.get(generarLetra());                        
+            newWord = subLista.get(valorRandom(subLista.size()));
+            while(newWord.length()>conf.getTablero().getColumnas() && newWord.length()>conf.getTablero().getFilas()){
+                subLista = dicPalabras.get(generarLetra());                        
+                newWord = subLista.get(valorRandom(subLista.size()));
+            }
+            this.palabrasDisponibles.addLast(newWord);
+        }
+    }
+    
+    private int valorRandom(int maximo){
+        Random rd = new Random();        
+        return rd.nextInt(maximo);
     }
 }

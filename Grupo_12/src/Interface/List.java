@@ -30,4 +30,3 @@ public interface List<E> extends Iterable<E> {
     E set(int index, E element);
     int size();
 }
-

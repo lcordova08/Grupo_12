@@ -86,6 +86,8 @@ public class InicioController implements Initializable {
         agruparRadioButton();
         cargarValoresPredeterminados();
         System.out.println(config);
+        this.btnNumerica.setVisible(false);
+        this.btnExtreme.setVisible(false);
     }    
     private void llenarCboCategorias(){
         this.cbTemaJuego.getItems().clear();
@@ -178,8 +180,13 @@ public class InicioController implements Initializable {
             String l;
             while ((l = br.readLine())!=null){
                 String palabra = l.trim().toUpperCase();
-                if (dicPalabras.containsKey(palabra.charAt(0)) && palabra.length()>2)
-                    dicPalabras.get(palabra.charAt(0)).addLast(palabra);
+                if (dicPalabras.containsKey(palabra.charAt(0)) && palabra.length()>2 && !palabra.contains("-")){
+                    if(palabra.contains(" "))
+                        dicPalabras.get(palabra.charAt(0)).addLast(palabra.replaceAll(" ", ""));
+                    else
+                        dicPalabras.get(palabra.charAt(0)).addLast(palabra);
+                }
+                    
             }
         } catch (FileNotFoundException ex) {
             System.err.println(ex.getMessage());
