@@ -478,7 +478,18 @@ public class TableroController implements Initializable {
                     else if (indices.count(eliminar)==1)
                         eliminar.setBackground(new Background(new BackgroundFill(conf.getColorSombreado(), CornerRadii.EMPTY, Insets.EMPTY)));
                 }
+            }else{
+                if(jugador1.isJugando()){
+                jugador1.setJugando(false);
+                jugador2.setJugando(true);
+                this.txtTurno.setText(jugador2.getNickname());
+            }else{
+                jugador1.setJugando(true);
+                jugador2.setJugando(false);
+                this.txtTurno.setText(jugador1.getNickname());
             }
+            }
+            
             
             letrasSeleccionadas.clear();                 
         });        
@@ -721,7 +732,7 @@ public class TableroController implements Initializable {
             }else{
                 int puntajeActual = jugador2.getPuntaje();
                 jugador2.setPuntaje(puntajeActual+puntos);
-                this.txtJugador2.setText(String.valueOf(jugador1.getPuntaje()));
+                this.txtJugador2.setText(String.valueOf(jugador2.getPuntaje()));
             }
                 
         }else{
@@ -738,14 +749,14 @@ public class TableroController implements Initializable {
                 actualizarErrores(jugador1,this.lblJugador1);
             else
                 actualizarErrores(jugador2,this.lblJugador2);
-            if(jugador1.getNumErores()==0 && jugador2.getNumErores()==0){
+            if(jugador1.getNumErores()==0 || jugador2.getNumErores()==0){
                 gridLetras.setDisable(true);
                 this.hbBottom.setDisable(true);
                 Alert a = new Alert(AlertType.INFORMATION,"Han excedido el maximo de errores");
                 if(jugador1.getPuntaje()>jugador2.getPuntaje())
                     a.setContentText("HA GANADO EL JUGADOR 1");
                 else if(jugador2.getPuntaje()>jugador1.getPuntaje())
-                    a.setContentText("HA GANADO EL JUGADOR 1");
+                    a.setContentText("HA GANADO EL JUGADOR 2");
                 else
                     a.setContentText("Ha habido un empate");
             a.show();
@@ -771,12 +782,12 @@ public class TableroController implements Initializable {
         erroresActuales--;
         jugador.setNumErores(erroresActuales);
         lbl.setText(jugador.getNickname()+ " -> "+erroresActuales+" errores restantes");      
-        if(jugador.getNumErores()==0 && conf.getNumJugadores()==2){
+        /*if(jugador.getNumErores()==0 && conf.getNumJugadores()==2){
             Alert a = new Alert(AlertType.ERROR,"Ha excedido el maximo de errores");
             a.setContentText(jugador.getNickname()+" ya no podrá seguir jugando");            
             a.show();    
         }
-        
+        */
     }
 
     @FXML
