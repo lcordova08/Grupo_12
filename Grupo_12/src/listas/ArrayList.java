@@ -6,7 +6,7 @@ import java.util.ListIterator;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class ArrayList<E> implements List<E> {
     

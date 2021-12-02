@@ -7,7 +7,7 @@ package modelo;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public enum Categoria {
     GENERAL, ANIMALES, PAISES;

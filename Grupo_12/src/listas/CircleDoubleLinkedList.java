@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class CircleDoubleLinkedList<E> implements List<E>{
     private Node<E> last;

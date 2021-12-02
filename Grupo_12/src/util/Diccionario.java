@@ -12,7 +12,7 @@ import modelo.Categoria;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class Diccionario {
     private String idioma;

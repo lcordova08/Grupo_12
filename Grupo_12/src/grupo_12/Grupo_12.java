@@ -16,7 +16,7 @@ import listas.CircleDoubleLinkedList;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class Grupo_12 extends Application {
     

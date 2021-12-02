@@ -7,7 +7,7 @@ package listas;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 
 //Clase Node 

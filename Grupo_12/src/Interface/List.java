@@ -9,7 +9,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 
 //Interface List con parametrizacion por tipo

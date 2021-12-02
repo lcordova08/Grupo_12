@@ -57,7 +57,7 @@ import util.Configuracion;
 /**
  * FXML Controller class
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class TableroController implements Initializable {
 

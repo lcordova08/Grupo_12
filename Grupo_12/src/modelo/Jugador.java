@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class Jugador {
     private String nickname;

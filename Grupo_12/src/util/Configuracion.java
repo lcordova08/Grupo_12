@@ -14,7 +14,7 @@ import modelo.Tablero;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class Configuracion {
     private int numJugadores;

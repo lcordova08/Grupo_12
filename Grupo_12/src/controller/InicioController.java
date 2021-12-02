@@ -42,7 +42,7 @@ import util.Configuracion;
 /**
  * FXML Controller class
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class InicioController implements Initializable {
 

@@ -9,7 +9,7 @@ import listas.ArrayList;
 
 /**
  *
- * @author Lea
+ * @author Grupo_12
  */
 public class Tablero {
     private int filas;
