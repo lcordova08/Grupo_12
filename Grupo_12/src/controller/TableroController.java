@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
+import java.util.Random;    
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Stack;
@@ -479,15 +479,18 @@ public class TableroController implements Initializable {
                         eliminar.setBackground(new Background(new BackgroundFill(conf.getColorSombreado(), CornerRadii.EMPTY, Insets.EMPTY)));
                 }
             }else{
-                if(jugador1.isJugando()){
-                jugador1.setJugando(false);
-                jugador2.setJugando(true);
-                this.txtTurno.setText(jugador2.getNickname());
-            }else{
-                jugador1.setJugando(true);
-                jugador2.setJugando(false);
-                this.txtTurno.setText(jugador1.getNickname());
-            }
+                if(conf.getNumJugadores()==2){
+                    if(jugador1.isJugando()){
+                        jugador1.setJugando(false);
+                        jugador2.setJugando(true);
+                        this.txtTurno.setText(jugador2.getNickname());
+                    }else{
+                        jugador1.setJugando(true);
+                        jugador2.setJugando(false);
+                        this.txtTurno.setText(jugador1.getNickname());
+                    }
+                }
+                
             }
             
             
